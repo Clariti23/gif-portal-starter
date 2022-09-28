@@ -14,15 +14,27 @@ const App = () => {
       if (solana) { 
         if (solana.isPhantom) {
           console.log('Phantom wallet found!');
+          const response = await solana.connect({onlyIfTrusted: true})
+          console.log('Connected with Public Key:', response.publicKey.toString());
         }
       } else {
-        alert('Solana object not found! Get a Phantom Wallet 👻 here ');
+        alert('Solana object not found! Get a Phantom Wallet 👻 here https://phantom.app/');
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  const connectWallet = async () => {};
+
+  const renderNotConnectedContainer = () => (
+    <button
+    className="cta-button connect-wallet-button"
+    onClick={connectWallet}
+    >
+    Connect to Wallet
+    </button>
+  );
 
   useEffect(() => {
     const onLoad = async () => {
@@ -40,6 +52,7 @@ const App = () => {
           <p className="sub-text">
             by Grant J.F. Ferowich ✨
           </p>
+          {renderNotConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
