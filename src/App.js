@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
+import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
+import { Program, Provider, web3 } from '@project-serum/anchor';
+
+
+
 
 // Constants
 const TWITTER_HANDLE = 'GrantFerowich';
@@ -15,6 +20,14 @@ const DUMMY_GIFS = [
   'https://media.giphy.com/media/l2RnnnALPxrKmQq1q/giphy.gif',
   'https://media.giphy.com/media/3oEhn51EPgFiSQw8GQ/giphy.gif'
 ]
+const { SystemProgram, Keypair } = web3;
+let baseAccount = Keypair.generate();
+const programId = new PublicKey("FACJtb84d9qiR8uLqsV51zoo3vYAYJzupanPC3pWDPkC");
+const network = clusterApiUrl('devnet')
+const opts = {
+  preflightCommitment: "processed"
+}
+
 const App = () => {
   // State
   const [ walletAddress, setWalletAddress ] = useState(null);
@@ -67,6 +80,14 @@ const App = () => {
     setInputValue(value);
   }
 
+  const getProvider = () => {
+    const connection = new Connection(network, opts.preflightCommitment );
+    const provider = new Provider(
+      connection, window.solana, opts.preflightCommitment
+    );
+    return provider;
+  }
+
   const renderNotConnectedContainer = () => (
     <button
     className="cta-button connect-wallet-button"
@@ -107,7 +128,7 @@ const App = () => {
     if (walletAddress) {
       console.log('Fetching the GIF list...');
 
-
+      // call Solana program
 
 
 
