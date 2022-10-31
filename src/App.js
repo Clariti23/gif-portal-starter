@@ -65,12 +65,25 @@ const App = () => {
   };
 
   const sendGif = async () => {
-    if (inputValue.length > 0) {
-        console.log('Gif link', inputValue )
-        setGifList([...gifList, inputValue])
-        setInputValue('');
-    } else {
-      console.log('Empty input. Give it another shot. ')
+    if (inputValue.length === 0) {
+        console.log('No gif link provided!')
+        return
+    }
+    setInputValue('');
+    console.log('Gif link: ', inputValue);
+    try {
+      const provider = getProvider()
+      const program = await getProgram();
+      await program.rpc.addGif(inputValue, {
+        accounts: {
+          baseAccount: baseAccount.publicKey,
+          user: provider.wallet.publicKey
+        }
+      });
+      console.log("GIF successfully sent to program", inputValue)
+      await getGifList();
+    } catch (error) {
+      console.log("Error sending gif: ", error)
     }
 
 
@@ -144,9 +157,9 @@ const App = () => {
       <button type='submit' className='cta-button submit-gif-button'>Submit</button>
     </form>
     <div className='gif-grid'>
-      {gifList.map( gif =>(
-        <div className='gif-item' key={gif}>
-          <img src={gif} alt={gif}/>
+      {gifList.map((item, index) =>(
+        <div className='gif-item' key={index}>
+          <img src={item.gifLink} alt={item.gifLink}/>
         </div>  
       ))}
     </div>
