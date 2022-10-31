@@ -3,6 +3,7 @@ import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 import { Connection, PublicKey, clusterApiUrl } from '@solana/web3.js';
 import { Program, Provider, web3 } from '@project-serum/anchor';
+import kp from './keypair.json';
 
 
 
@@ -21,7 +22,11 @@ const DUMMY_GIFS = [
   'https://media.giphy.com/media/3oEhn51EPgFiSQw8GQ/giphy.gif'
 ]
 const { SystemProgram, Keypair } = web3;
-let baseAccount = Keypair.generate();
+
+
+const array = Object.values(kp._keypair.secretKey)
+const secret = new Uint8Array(array)
+const baseAccount = web3.Keypair.fromSecretKey(secret)
 const programId = new PublicKey("FACJtb84d9qiR8uLqsV51zoo3vYAYJzupanPC3pWDPkC");
 const network = clusterApiUrl('devnet')
 const opts = {
